@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  jupyterhub:
+    build: jupyterhub
+    container_name: jupyter_hub
+    ports:
+      - "8000:8000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./jupyterhub/data:/data"
+    env_file: .env
+    networks:
+      - ${DOCKER_NETWORK_NAME}
+
+networks:
+  jupyter-integration:
+    name: ${DOCKER_NETWORK_NAME}
