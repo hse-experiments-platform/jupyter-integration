@@ -13,6 +13,14 @@ services:
     networks:
       - ${DOCKER_NETWORK_NAME}
 
+  jupyter-integration:
+    build: integration-server
+    container_name: intergration_server
+    ports:
+      - "5000:5000"
+    env_file: .env
+
+
 networks:
   jupyter-integration:
     name: ${DOCKER_NETWORK_NAME}
