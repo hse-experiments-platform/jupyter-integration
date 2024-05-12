@@ -1,4 +1,4 @@
-import os, nativeauthenticator
+import os
 
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 
@@ -20,7 +20,13 @@ c.JupyterHub.db_url = "sqlite:////data/jupyterhub.sqlite"
 c.JupyterHub.hub_ip = "jupyterhub"
 c.JupyterHub.hub_port = 8080
 
-c.Authenticator.admin_users = {'user'}
-#c.LocalAuthenticator.create_system_users = True
-c.JupyterHub.authenticator_class = 'native'
-c.JupyterHub.template_paths = [f"{os.path.dirname(nativeauthenticator.__file__)}/templates/"]
+server_token = os.environ["SERVER_API_TOKEN"]
+c.JupyterHub.authenticator_class = 'null'
+c.JupyterHub.hub_routespec = "/hub/api"
+c.JupyterHub.services = [
+    {
+        "name": "service-admin",
+        "admin": True,
+        "api_token": server_token,
+    },
+]
