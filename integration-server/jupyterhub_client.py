@@ -1,5 +1,6 @@
 import requests
 from jupyter_utils import request_jupyter
+import time
 
 
 def create_lab(user_id: str):    
@@ -12,5 +13,19 @@ def create_lab(user_id: str):
    
     server_creation_url = f"hub/api/users/{user_id}/server"
     request_jupyter(requests.post, server_creation_url, assert_success=False)
+
+    max_retries = 12
+    server_status = False
+    server_ready_url = f"hub/api/users/{user_id}"
+    for i in range(max_retries):
+        result = request_jupyter(requests.get, server_ready_url)
+        if result["servers"][""]:
+            server = result["servers"][""]
+            status = server["ready"]
+            if status:
+                break
+        time.sleep(5)
+    if not status:
+        raise ValueError(f"Server for user {user_id} was not ready after {max_retries} retries.")
 
     return user_api_token

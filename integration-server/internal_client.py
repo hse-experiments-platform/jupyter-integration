@@ -1,2 +1,23 @@
-def get_dataset_url(user_id: str, dataset_name: str):
-    return "http://tcarzverey.ru:9901/api/v1/download-shared-object/aHR0cDovLzEyNy4wLjAuMTo5MDAwL2ltYWdlcy1ob3N0aW5nLyVEMCU5RCVEMCVCRSVEMCVCMiVEMCVCMCVEMSU4RiUyMCVEMSU4MiVEMCVCMCVEMCVCMSVEMCVCQiVEMCVCOCVEMSU4NiVEMCVCMCUyMC0lMjAlRDAlOUIlRDAlQjglRDElODElRDElODIxLmNzdj9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPVBXN1pUWVlVSlYyVjVSQ0VLQlpVJTJGMjAyNDA1MTElMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwNTExVDAxMTIwOFomWC1BbXotRXhwaXJlcz00MzIwMCZYLUFtei1TZWN1cml0eS1Ub2tlbj1leUpoYkdjaU9pSklVelV4TWlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKaFkyTmxjM05MWlhraU9pSlFWemRhVkZsWlZVcFdNbFkxVWtORlMwSmFWU0lzSW1WNGNDSTZNVGN4TlRRek1qSXhNaXdpY0dGeVpXNTBJam9pYldsdWFXOWZkWE5sY2lKOS5tdXJORmx0RTRGdEstREZjOFhWbWRyMEFNekpfQTRJNlJPMGV0SWEtRmtDSGU4dktMU3VXVzZZZ0JFemJfQXlnelVVekRvZVI2WVRiT09kTjdjZHIxdyZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QmdmVyc2lvbklkPW51bGwmWC1BbXotU2lnbmF0dXJlPTkxMDdhZWVjZjNkMTY4ZmI0YmFmYWUwY2Q2MzUyZWU1MzBjMzc2MGQ3YzZlYTYxYWZiNTUxYjZjYTM0YjNlNTA="
+import os
+import requests
+
+def get_user_id(auth_token: str):
+    base_url = os.getenv("AUTH_SERVICE_URL")
+    headers = {"Authorization": auth_token}
+
+    response = requests.get(f"{base_url}/validate", headers=headers)
+    if response.status_code != 200:
+        raise ValueError(f"Failed to get user id. Response: {response.json()}")
+
+    return response.json()["user_id"]
+
+
+def get_dataset_url(dataset_id: str, auth_token: str):
+    base_url = os.getenv("DATASET_SERVICE_URL")
+    headers = {"Authorization": auth_token}
+
+    response = requests.get(f"{base_url}/datasets/{dataset_id}/download", headers=headers)
+    if response.status_code != 200:
+        raise ValueError(f"Failed to get dataset url for dataset {dataset_id}. Response: {response.json()}")
+
+    return response.json()["url"]
