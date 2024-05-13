@@ -42,7 +42,7 @@ def _create_body(dataset_name, dataset_url):
         "path": f"{dataset_name}.ipynb"
     }
 
-def create_notebook(user_id, dataset_name, dataset_url):
+def create_notebook(user_id, dataset_name, dataset_url, user_token):
     lab_api = f'user/{user_id}/api'
 
     notebook_creation_url = f"{lab_api}/contents"
@@ -54,7 +54,7 @@ def create_notebook(user_id, dataset_name, dataset_url):
     body = {
         "path": f"/{dataset_name}.ipynb",
     }
-    request_jupyter(requests.patch, rename_notebook_url, body)
+    request_jupyter(requests.patch, rename_notebook_url, body, assert_success=False)
 
     set_content_url = f"{lab_api}/contents/{dataset_name}.ipynb"
-    request_jupyter(requests.put, set_content_url, _create_body(dataset_name, dataset_url))
+    request_jupyter(requests.put, set_content_url, _create_body(dataset_name, dataset_url), assert_success=False)

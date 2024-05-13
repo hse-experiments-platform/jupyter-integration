@@ -2,6 +2,7 @@ import os
 
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
 
+c.Spawner.http_timeout = 3600
 c.DockerSpawner.image = os.environ['DOCKER_JUPYTER_IMAGE']
 
 network_name = os.environ["DOCKER_NETWORK_NAME"]
@@ -17,7 +18,7 @@ c.DockerSpawner.remove = True
 c.JupyterHub.cookie_secret_file = "/data/jupyterhub_cookie_secret"
 c.JupyterHub.db_url = "sqlite:////data/jupyterhub.sqlite"
 
-c.JupyterHub.hub_ip = "jupyterhub"
+c.JupyterHub.hub_ip = "jupyter-hub"
 c.JupyterHub.hub_port = 8080
 
 server_token = os.environ["SERVER_API_TOKEN"]
